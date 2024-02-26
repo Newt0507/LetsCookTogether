@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2588026145598417864}
   m_Layer: 0
-  m_Name: Potato
+  m_Name: Potato_VIsual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
