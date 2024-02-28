@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,8 +40,8 @@ public class StoveCounter : BaseCounter, IProgress
 
                     if (_fryingTimer >= _fryingRecipeSO.fryingAmountMax)
                     {
-                        GetKitchenObject().DestroySelf();
-                        KitchenObject.SpawnKitchenObject(_fryingRecipeSO.output, this);
+                        Cook();
+
                         _cookingState = CookingState.Fried;
                         _fryingTimer = 0f;
                         _fryingRecipeSO = GetFryingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
@@ -59,8 +59,8 @@ public class StoveCounter : BaseCounter, IProgress
 
                     if (_fryingTimer >= _fryingRecipeSO.fryingAmountMax)
                     {
-                        GetKitchenObject().DestroySelf();
-                        KitchenObject.SpawnKitchenObject(_fryingRecipeSO.output, this);
+                        Cook();
+
                         _cookingState = CookingState.Burned;
                     }
                     break;
@@ -70,31 +70,29 @@ public class StoveCounter : BaseCounter, IProgress
 
                     OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
                     {
-                        progressTime = _fryingTimer,
+                        progressTime = 0f,
                     });
 
                     break;
             }
-
         }
-
 
         CookingVisual();
     }
 
     public override void Interact(Player player)
     {
-        if (!HasKitchenObject())
+        if (!HasKitchenObject()) //Counter này đang k có đồ
         {
-            if (player.HasKitchenObject())
+            if (player.HasKitchenObject()) //Player đang cầm đồ
             {
-                if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO()))
+                if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) //Đồ player cầm là nguyên liệu có thể nấu
                 {
                     player.GetKitchenObject().SetNewKitchenObjectParent(this);
 
                     _fryingRecipeSO = GetFryingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
-                    MeatKitchenObject _meatKitchenObject = GetKitchenObject().GetComponent<MeatKitchenObject>();
+                    CookingKitchenObject _meatKitchenObject = GetKitchenObject().GetComponent<CookingKitchenObject>();
                     if (_meatKitchenObject.GetCookingState() == CookingState.Burned)
                         _cookingState = CookingState.Burned;
                     else if (_meatKitchenObject.GetCookingState() == CookingState.Fried)
@@ -111,24 +109,59 @@ public class StoveCounter : BaseCounter, IProgress
                         maxValue = _fryingRecipeSO.fryingAmountMax
                     });
                 }
-                else
-                {
-
-                }
-
             }
-            else
+            else //Player đang k cầm gì
             {
-
+                
             }
         }
-        else
+        else //Counter này đang có đồ
         {
-            if (player.HasKitchenObject())
+            if (player.HasKitchenObject()) //Player đang cầm đồ
             {
+                if (player.GetKitchenObject().TryGetContainerKitchenObject(out ContainerKitchenObject plateKitchenObject)) //Player đang cầm đĩa
+                {
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) //Đồ trên quầy có thể add được vào trong đĩa
+                    {
+                        GetKitchenObject().DestroySelf();
+                        _isCooking = false;
 
+                        OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
+                        {
+                            progressTime = 0f,
+                        });
+                    }
+                }
+                else //Player đang cầm đồ gì đó k phải đĩa
+                {
+                    //Nếu player đang cầm có HasRecipeWithInput(...) = true -> Swap
+                    if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) //Đồ player cầm là nguyên liệu có thể nấu
+                    {
+                        //Đổi vị trí của 2 kitchenobj
+                        KitchenObject.SwapKitchenObject(GetKitchenObject(), this, player.GetKitchenObject(), player);
+
+                        _fryingRecipeSO = GetFryingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
+
+                        CookingKitchenObject _meatKitchenObject = GetKitchenObject().GetComponent<CookingKitchenObject>();
+                        if (_meatKitchenObject.GetCookingState() == CookingState.Burned)
+                            _cookingState = CookingState.Burned;
+                        else if (_meatKitchenObject.GetCookingState() == CookingState.Fried)
+                            _cookingState = CookingState.Fried;
+                        else
+                            _cookingState = CookingState.Frying;
+
+                        _fryingTimer = 0f;
+                        _isCooking = true;
+
+                        OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
+                        {
+                            progressTime = _fryingTimer,
+                            maxValue = _fryingRecipeSO.fryingAmountMax
+                        });
+                    }
+                }
             }
-            else
+            else //Player đang k cầm gì
             {
                 GetKitchenObject().SetNewKitchenObjectParent(player);
                 _cookingState = CookingState.Idle;
@@ -141,6 +174,14 @@ public class StoveCounter : BaseCounter, IProgress
 
             }
         }
+    }
+
+    private void Cook()
+    {
+        Quaternion rot = GetKitchenObject().transform.localRotation;
+        GetKitchenObject().DestroySelf();
+        KitchenObject.SpawnKitchenObject(_fryingRecipeSO.output, this);
+        GetKitchenObject().transform.localRotation = rot;
     }
 
     private void CookingVisual()

@@ -84,20 +84,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         transform.LookAt(_targetPosition);
         transform.position = Vector3.MoveTowards(transform.position, _targetPosition, _speed * Time.deltaTime);
 
-        /*if (_isInteractingWithCounter)
-        {
-            if (Vector3.Distance(transform.position, _targetPosition) < 0.5f)
-            {
-                baseCounter.Interact(this);
-                _isWalking = false;
-            }
-        }
-        else            
-        {
-            if (Vector3.Distance(transform.position, _targetPosition) < 0.1f)
-                _isWalking = false;
-        }*/
-
         InteractCounter();
 
         if (Vector3.Distance(transform.position, _targetPosition) < 0.1f)

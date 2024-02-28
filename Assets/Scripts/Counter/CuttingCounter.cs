@@ -26,18 +26,18 @@ public class CuttingCounter : BaseCounter, IProgress
 
     private void Update()
     {
-        if(_cuttingRecipeSO != null) InteractPlayer();
+        if(HasKitchenObject()) InteractPlayer();
         
         Animation();
     }
 
     public override void Interact(Player player)
     {
-        if (!HasKitchenObject())
+        if (!HasKitchenObject()) //Counter này đang k có đồ
         {
-            if (player.HasKitchenObject())
+            if (player.HasKitchenObject()) //Player đang cầm đồ
             {
-                if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO()))
+                if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) //Đồ player cầm là nguyên liệu có thể cắt
                 {
                     player.GetKitchenObject().SetNewKitchenObjectParent(this);
 
@@ -53,27 +53,49 @@ public class CuttingCounter : BaseCounter, IProgress
                     });
                 }                
             }
-            else
+            else //Player đang k cầm gì
             {
-                _isCutting = false;
+
             }
         }
-        else
+        else //Counter này đang có đồ
         {
-            if (player.HasKitchenObject())
+            if (player.HasKitchenObject()) //Player đang cầm đồ
             {
-                _isCutting = false;
-            }
-            else
-            {
-                if (player.IsInteractWithCuttingCounter())
+                if (player.GetKitchenObject().TryGetContainerKitchenObject(out ContainerKitchenObject plateKitchenObject)) //Player đang cầm đĩa
                 {
-                    _cuttingTimer = 0f;
-                    _isCutting = true;
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) //Đồ trên quầy có thể add được vào trong đĩa
+                        GetKitchenObject().DestroySelf();
                 }
-                else
+                else //Player đang cầm đồ gì đó k phải đĩa
                 {
-                    _isCutting = false;
+                    //Nếu player đang cầm có HasRecipeWithInput(...) = true -> Swap
+                    if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) //Đồ player cầm là nguyên liệu có thể cắt
+                    {
+                        //Đổi vị trí của 2 kitchenobj
+                        KitchenObject.SwapKitchenObject(GetKitchenObject(), this, player.GetKitchenObject(), player); 
+
+                        _cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
+
+                        _cuttingTimer = 0f;
+                        //_isCutting = true;
+
+                        OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
+                        {
+                            progressTime = _cuttingTimer,
+                            maxValue = _cuttingRecipeSO.cuttingAmountMax
+                        });
+                    }
+                }
+            }
+            else //Player đang k cầm gì
+            {
+                if (player.IsInteractWithCuttingCounter()) //Player đang tương tác với CuttingCounter
+                {
+                    if (_cuttingRecipeSO != null && _cuttingTimer < _cuttingRecipeSO.cuttingAmountMax) //Đồ chưa cắt xong
+                        _isCutting = true;
+                    else //Đồ đã cắt xong
+                        GetKitchenObject().SetNewKitchenObjectParent(player);
                 }
             }
         }
@@ -84,14 +106,18 @@ public class CuttingCounter : BaseCounter, IProgress
         float interactDistance = 1f;        
         if (Physics.BoxCast(transform.position, transform.lossyScale / 2, transform.forward , out RaycastHit hit, transform.rotation, interactDistance))
         {
-            if (hit.transform.TryGetComponent(out Player player) && player.IsInteractWithCuttingCounter())
+            //Quá trình cắt bắt đầu khi player đang tương tác với CutingCounter và player k cầm đồ gì 
+            if (hit.transform.TryGetComponent(out Player player) && player.IsInteractWithCuttingCounter() && !player.HasKitchenObject()) 
             {
+                if (_cuttingRecipeSO == null)
+                    return;
+
                 if (_cuttingTimer >= _cuttingRecipeSO.cuttingAmountMax)
                 {
                     if (_isCutting)
                     {
                         Cut();
-                        GetKitchenObject().SetNewKitchenObjectParent(player);
+
                         _cuttingRecipeSO = null;
                         _isCutting = false;
                     }
@@ -119,12 +145,11 @@ public class CuttingCounter : BaseCounter, IProgress
         }
         else
         {
-            _cuttingTimer = 0f;
             _isCutting = false;
 
             OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
             {
-                progressTime = _cuttingTimer,
+                progressTime = 0f,
             });
         }
     }

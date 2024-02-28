@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0009685910308bb4397978421ccd7369, type: 3}
+  m_Name: UncookedFriesSlices
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1331230944687384268, guid: ab72405bab8b0564fa2687037cbaecb0, type: 3}
+  sprite: {fileID: -766821109, guid: 7f65b0c6784f3e24491d4076e7d0050f, type: 3}
+  prefabName: Uncooked Fried Slices

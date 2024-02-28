@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeatKitchenObject : KitchenObject
+public class CookingKitchenObject : KitchenObject
 {
     [SerializeField] private CookingState _cookingState;
 

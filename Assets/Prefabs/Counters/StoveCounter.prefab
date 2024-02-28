@@ -103,6 +103,8 @@ MonoBehaviour:
   _fryingRecipeSOArray:
   - {fileID: 11400000, guid: 9ebbe323db495db46a9b96ecf1b35d58, type: 2}
   - {fileID: 11400000, guid: 9c4050adca1c9644f9bfff77d271fd40, type: 2}
+  - {fileID: 11400000, guid: 0abf8b8448de4d04fb301df0ae68efa6, type: 2}
+  - {fileID: 11400000, guid: a8064115306373845ab2342dac2cbfd4, type: 2}
   _gameObjectVisualArray:
   - {fileID: 2044770241493841155}
   - {fileID: 6066082717001147018}

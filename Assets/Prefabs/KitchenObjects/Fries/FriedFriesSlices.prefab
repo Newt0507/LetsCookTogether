@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1331230944687384268}
-  - component: {fileID: -2009007530855917273}
+  - component: {fileID: 2214758696217579469}
   m_Layer: 0
-  m_Name: FriedSlices
+  m_Name: FriedFriesSlices
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-2009007530855917273
+--- !u!114 &2214758696217579469
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,10 +42,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1331230944687384271}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10d2f9682a443ef48b8f3acc759cdeaa, type: 3}
+  m_Script: {fileID: 11500000, guid: 929ff2b582a11a648ba5afae7a78ea0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _kitchenObjectSO: {fileID: 11400000, guid: 9cc9d41da3861ab44b2e1363fe265a98, type: 2}
+  _kitchenObjectSO: {fileID: 11400000, guid: 8291b0213468f3b4da89c13a39ed247f, type: 2}
+  _cookingState: 2
 --- !u!1001 &7895223692314630344
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53,6 +54,46 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1331230944687384268}
     m_Modifications:
+    - target: {fileID: 1762718455976894001, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
+    - target: {fileID: 1762718456187386632, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
+    - target: {fileID: 1762718456592191370, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
+    - target: {fileID: 2010734595157360346, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
+    - target: {fileID: 2010734596691066076, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
+    - target: {fileID: 4737150928818687912, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
+    - target: {fileID: 4737150928970552458, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
+    - target: {fileID: 4737150929401472383, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
     - target: {fileID: 6044833598673586938, guid: 2d7655df690406f4984ee5f4b5134e82,
         type: 3}
       propertyPath: m_RootOrder
@@ -133,6 +174,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: FriesSlices_Visual
       objectReference: {fileID: 0}
+    - target: {fileID: 7285977406235026561, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
+    - target: {fileID: 9218479380955442723, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
+    - target: {fileID: 9218479381597409163, guid: 2d7655df690406f4984ee5f4b5134e82,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f3e520d1c180334b927c44d4040028a, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d7655df690406f4984ee5f4b5134e82, type: 3}
 --- !u!4 &4499914337625854514 stripped
