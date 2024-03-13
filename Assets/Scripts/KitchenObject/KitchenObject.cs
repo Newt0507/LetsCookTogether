@@ -5,6 +5,7 @@ using UnityEngine;
 public class KitchenObject : MonoBehaviour
 {
     [SerializeField] private KitchenObjectSO _kitchenObjectSO;
+    [SerializeField] private bool _canBeDelivered;
 
     private IKitchenObjectParent _currentKitchenObjectParent;
 
@@ -27,11 +28,6 @@ public class KitchenObject : MonoBehaviour
         transform.localPosition = Vector3.zero;
     }
     
-    /*public IKitchenObjectParent GetCurrentKitchenObjectParent()
-    {
-        return _currentKitchenObjectParent;
-    }*/
-
     public void DestroySelf()
     {
         _currentKitchenObjectParent.ClearKitchenObject();
@@ -51,6 +47,11 @@ public class KitchenObject : MonoBehaviour
             return false;
         }
 
+    }
+
+    public bool CanBeDelivered()
+    {
+        return _canBeDelivered;
     }
 
     public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)

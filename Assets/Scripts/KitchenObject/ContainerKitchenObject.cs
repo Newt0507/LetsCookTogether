@@ -6,6 +6,7 @@ public class ContainerKitchenObject : KitchenObject
 {
     [SerializeField] private List<KitchenObjectSO> _validKitchenObjectSOList;
     [SerializeField] private Transform _iconTemplateVisual;
+    [SerializeField] private bool _isPlate;
 
     private List<KitchenObjectSO> _kitchenObjectSOList;
 
@@ -14,7 +15,6 @@ public class ContainerKitchenObject : KitchenObject
         _kitchenObjectSOList = new List<KitchenObjectSO>();
         _iconTemplateVisual.gameObject.SetActive(false);
     }
-
 
     public List<KitchenObjectSO> GetKitchenObjectSOList()
     {
@@ -41,6 +41,12 @@ public class ContainerKitchenObject : KitchenObject
         }
     }
 
+    public bool IsPlate()
+    {
+        return _isPlate;
+    }
+
+
     private void UpdateVisual(KitchenObjectSO kitchenObjectSO)
     {
         foreach (Transform child in transform)
@@ -50,7 +56,8 @@ public class ContainerKitchenObject : KitchenObject
                 if (kitchenObject.GetKitchenObjectSO() == kitchenObjectSO)
                 {
                     kitchenObject.gameObject.SetActive(true);
-                    UpdateUIVisual(kitchenObjectSO);
+                    if (_isPlate)
+                        UpdateUIVisual(kitchenObjectSO);
                 }
             }
         }
@@ -60,6 +67,6 @@ public class ContainerKitchenObject : KitchenObject
     {
         Transform iconTransform = Instantiate(_iconTemplateVisual, _iconTemplateVisual.parent);
         iconTransform.gameObject.SetActive(true);
-        iconTransform.GetComponent<IconTemplateVisual>().SetKitchenObjectSOVisual(kitchenObjectSO);
+        iconTransform.GetComponent<IconTemplateVisualUI>().SetKitchenObjectSOVisual(kitchenObjectSO);
     }
 }

@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _kitchenObjectSO: {fileID: 11400000, guid: 0dd572cf70dca874586c429a6d2c6bcd, type: 2}
+  _canBeDelivered: 1
 --- !u!1001 &7864155552332645592
 PrefabInstance:
   m_ObjectHideFlags: 0

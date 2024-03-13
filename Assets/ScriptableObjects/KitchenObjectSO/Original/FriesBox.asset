@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: FriesBox
   m_EditorClassIdentifier: 
   prefab: {fileID: 1331230944687384268, guid: d302c70958c0acd4b8bf10735514e580, type: 3}
-  sprite: {fileID: 21300000, guid: 2ca28f5e08b50744d9fd80266b830d9d, type: 3}
+  sprite: {fileID: -966651325, guid: 7f65b0c6784f3e24491d4076e7d0050f, type: 3}
   prefabName: Fries Bag

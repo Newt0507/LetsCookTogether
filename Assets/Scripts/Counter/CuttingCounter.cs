@@ -19,9 +19,12 @@ public class CuttingCounter : BaseCounter, IProgress
 
     private Animator _animator;
 
+    private AudioSource _audioSource;
+
     private void Awake()
     {
         _animator = gameObject.GetComponentInChildren<Animator>();
+        _audioSource = gameObject.GetComponentInChildren<AudioSource>();
     }
 
     private void Update()
@@ -39,12 +42,14 @@ public class CuttingCounter : BaseCounter, IProgress
             {
                 if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) //Đồ player cầm là nguyên liệu có thể cắt
                 {
+                    AudioManager.Instance.PlaySFX(SoundEnum.DropSound);
                     player.GetKitchenObject().SetNewKitchenObjectParent(this);
 
                     _cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
                     _cuttingTimer = 0f;
                     _isCutting = true;
+                    CuttingSound();
 
                     OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
                     {
@@ -65,7 +70,10 @@ public class CuttingCounter : BaseCounter, IProgress
                 if (player.GetKitchenObject().TryGetContainerKitchenObject(out ContainerKitchenObject plateKitchenObject)) //Player đang cầm đĩa
                 {
                     if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) //Đồ trên quầy có thể add được vào trong đĩa
+                    {
+                        AudioManager.Instance.PlaySFX(SoundEnum.PickUpSound);
                         GetKitchenObject().DestroySelf();
+                    }
                 }
                 else //Player đang cầm đồ gì đó k phải đĩa
                 {
@@ -73,12 +81,12 @@ public class CuttingCounter : BaseCounter, IProgress
                     if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) //Đồ player cầm là nguyên liệu có thể cắt
                     {
                         //Đổi vị trí của 2 kitchenobj
+                        AudioManager.Instance.PlaySFX(SoundEnum.PickUpSound);
                         KitchenObject.SwapKitchenObject(GetKitchenObject(), this, player.GetKitchenObject(), player); 
 
                         _cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
                         _cuttingTimer = 0f;
-                        //_isCutting = true;
 
                         OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
                         {
@@ -93,9 +101,15 @@ public class CuttingCounter : BaseCounter, IProgress
                 if (player.IsInteractWithCuttingCounter()) //Player đang tương tác với CuttingCounter
                 {
                     if (_cuttingRecipeSO != null && _cuttingTimer < _cuttingRecipeSO.cuttingAmountMax) //Đồ chưa cắt xong
+                    {
                         _isCutting = true;
+                        CuttingSound();
+                    }
                     else //Đồ đã cắt xong
+                    {
+                        AudioManager.Instance.PlaySFX(SoundEnum.PickUpSound);
                         GetKitchenObject().SetNewKitchenObjectParent(player);
+                    }
                 }
             }
         }
@@ -120,12 +134,14 @@ public class CuttingCounter : BaseCounter, IProgress
 
                         _cuttingRecipeSO = null;
                         _isCutting = false;
+                        CuttingSound();
                     }
                 }
                 else
                 {
                     _cuttingTimer += Time.deltaTime;
                     _isCutting = true;
+                    _audioSource.UnPause();
 
                     OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
                     {
@@ -136,6 +152,7 @@ public class CuttingCounter : BaseCounter, IProgress
             else
             {
                 _isCutting = false;
+                CuttingSound();
 
                 OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
                 {
@@ -146,6 +163,7 @@ public class CuttingCounter : BaseCounter, IProgress
         else
         {
             _isCutting = false;
+            CuttingSound();
 
             OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
             {
@@ -166,6 +184,15 @@ public class CuttingCounter : BaseCounter, IProgress
         GetKitchenObject().DestroySelf();
 
         KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
+    }
+
+    private void CuttingSound()
+    {
+        _audioSource.volume = AudioManager.Instance.GetSFXVolume();
+        if (_isCutting)
+            _audioSource.Play();
+        else
+            _audioSource.Pause();
     }
 
     private bool HasRecipeWithInput(KitchenObjectSO inputKitchenObjectSO)

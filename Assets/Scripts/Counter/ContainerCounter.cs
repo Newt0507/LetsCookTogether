@@ -21,6 +21,7 @@ public class ContainerCounter : BaseCounter
         {
             _animator.SetTrigger(OPEN_CLOSE);
 
+            AudioManager.Instance.PlaySFX(SoundEnum.PickUpSound);
             KitchenObject.SpawnKitchenObject(_kitchenObjectSO, player);
         }
     }

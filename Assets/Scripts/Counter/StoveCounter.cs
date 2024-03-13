@@ -15,8 +15,17 @@ public class StoveCounter : BaseCounter, IProgress
     private FryingRecipeSO _fryingRecipeSO;
     private bool _isCooking;
 
-    private void Start()
+    private AudioSource _audioSource;
+
+    private float _warningSoundTimer;
+
+    private void Awake()
     {
+        _audioSource = gameObject.GetComponentInChildren<AudioSource>();
+    }
+
+    private void Start()
+    {         
         _cookingState = CookingState.Idle;
         _isCooking = false;
     }
@@ -57,16 +66,20 @@ public class StoveCounter : BaseCounter, IProgress
                         maxValue = _fryingRecipeSO.fryingAmountMax
                     });
 
+                    if (CanPlayWarningSound())
+                        SetBurnWarningTimerSound();
+
                     if (_fryingTimer >= _fryingRecipeSO.fryingAmountMax)
                     {
                         Cook();
 
-                        _cookingState = CookingState.Burned;
+                        _cookingState = CookingState.Burned;                        
                     }
                     break;
 
                 case CookingState.Burned:
                     _isCooking = false;
+                    CookingSound();
 
                     OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
                     {
@@ -88,6 +101,7 @@ public class StoveCounter : BaseCounter, IProgress
             {
                 if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) //Đồ player cầm là nguyên liệu có thể nấu
                 {
+                    AudioManager.Instance.PlaySFX(SoundEnum.DropSound);
                     player.GetKitchenObject().SetNewKitchenObjectParent(this);
 
                     _fryingRecipeSO = GetFryingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
@@ -102,6 +116,7 @@ public class StoveCounter : BaseCounter, IProgress
 
                     _fryingTimer = 0f;
                     _isCooking = true;
+                    CookingSound();
 
                     OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
                     {
@@ -123,8 +138,10 @@ public class StoveCounter : BaseCounter, IProgress
                 {
                     if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) //Đồ trên quầy có thể add được vào trong đĩa
                     {
+                        AudioManager.Instance.PlaySFX(SoundEnum.PickUpSound);
                         GetKitchenObject().DestroySelf();
                         _isCooking = false;
+                        CookingSound();
 
                         OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
                         {
@@ -138,6 +155,7 @@ public class StoveCounter : BaseCounter, IProgress
                     if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) //Đồ player cầm là nguyên liệu có thể nấu
                     {
                         //Đổi vị trí của 2 kitchenobj
+                        AudioManager.Instance.PlaySFX(SoundEnum.PickUpSound);
                         KitchenObject.SwapKitchenObject(GetKitchenObject(), this, player.GetKitchenObject(), player);
 
                         _fryingRecipeSO = GetFryingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
@@ -152,6 +170,7 @@ public class StoveCounter : BaseCounter, IProgress
 
                         _fryingTimer = 0f;
                         _isCooking = true;
+                        CookingSound();
 
                         OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
                         {
@@ -163,10 +182,13 @@ public class StoveCounter : BaseCounter, IProgress
             }
             else //Player đang k cầm gì
             {
-                GetKitchenObject().SetNewKitchenObjectParent(player);
                 _cookingState = CookingState.Idle;
                 _isCooking = false;
+                CookingSound();
 
+                AudioManager.Instance.PlaySFX(SoundEnum.PickUpSound);
+                GetKitchenObject().SetNewKitchenObjectParent(player);
+                
                 OnProgressChanged?.Invoke(this, new IProgress.OnProgressChangedEventArgs
                 {
                     progressTime = 0f,
@@ -192,6 +214,32 @@ public class StoveCounter : BaseCounter, IProgress
         }
     }
 
+    private void CookingSound()
+    {
+        _audioSource.volume = AudioManager.Instance.GetSFXVolume();
+        if (_isCooking)
+            _audioSource.Play();
+        else
+            _audioSource.Pause();
+    }
+
+    private bool CanPlayWarningSound()
+    {
+        float burnShowProgressAmount = .5f;
+        return _fryingTimer >= burnShowProgressAmount;
+    }
+
+    private void SetBurnWarningTimerSound()
+    {
+        _warningSoundTimer -= Time.deltaTime;
+        if (_warningSoundTimer <= 0f)
+        {
+            float warningSoundTimerMax = .2f;
+            _warningSoundTimer = warningSoundTimerMax;
+
+            AudioManager.Instance.PlaySFX(SoundEnum.WarningSound);
+        }
+    }
 
     private bool HasRecipeWithInput(KitchenObjectSO inputKitchenObjectSO)
     {
@@ -207,5 +255,10 @@ public class StoveCounter : BaseCounter, IProgress
                 return fryingRecipeSO;
 
         return null;
+    }
+
+    public bool IsFried()
+    {
+        return _cookingState == CookingState.Fried;
     }
 }

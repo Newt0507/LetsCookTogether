@@ -15,7 +15,7 @@ PrefabInstance:
     - target: {fileID: 6817019016372820317, guid: 1eba5a4bd2da94d40bd66092e27b2fc9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -11.5
       objectReference: {fileID: 0}
     - target: {fileID: 6817019016372820317, guid: 1eba5a4bd2da94d40bd66092e27b2fc9,
         type: 3}
@@ -25,7 +25,7 @@ PrefabInstance:
     - target: {fileID: 6817019016372820317, guid: 1eba5a4bd2da94d40bd66092e27b2fc9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 6817019016372820317, guid: 1eba5a4bd2da94d40bd66092e27b2fc9,
         type: 3}
@@ -95,6 +95,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnPoint: {fileID: 1801624605317416021}
   _reactPoint: {fileID: 603615382374146281}
+  _plateKitchenObjectSO: {fileID: 11400000, guid: 362d899206c8b2e479b82a7dd4b70881,
+    type: 2}
 --- !u!4 &786961972668801178 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6817019016372820317, guid: 1eba5a4bd2da94d40bd66092e27b2fc9,

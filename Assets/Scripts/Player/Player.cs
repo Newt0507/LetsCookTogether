@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
@@ -19,11 +20,16 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private KitchenObject kitchenObject;
 
+    private AudioSource _audioSource;
+    private float _footStepTimer;
+    private float _footStepTimerMax = .1f;
+
     private void Awake()
     {
         _mainCamera = Camera.main;
         _anim = gameObject.GetComponentInChildren<Animator>();
         _targetPosition = transform.position;
+        _audioSource = gameObject.GetComponentInChildren<AudioSource>();
     }
 
     private void Update()
@@ -32,7 +38,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         GetInputByClick();
 
         Animation();
-        //if (_isInteractingWithCounter) InteractCounter();
+        MovingSound();
     }
 
     private void FixedUpdate()
@@ -67,13 +73,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             if (hit.transform.TryGetComponent(out BaseCounter baseCounter))
-            {
                 _targetPosition = new Vector3(baseCounter.GetReactPoint().position.x, transform.position.y, baseCounter.GetReactPoint().position.z);
-            }
             else
-            {
                 _targetPosition = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-            }
 
             _isWalking = true;
         }
@@ -95,27 +97,22 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         Vector3 direction = _targetPosition - transform.position;
 
         float interactDistance = 1f;
+        bool interact = false;
         if (Physics.Raycast(transform.position, direction, out RaycastHit hit, interactDistance))
         {
             if (hit.transform.TryGetComponent(out BaseCounter baseCounter))
             {
                 _isWalking = false;
-                baseCounter.Interact(this);
+
+                if (GamePlayingManager.Instance.IsPlayingState())
+                    baseCounter.Interact(this);
 
                 if (baseCounter is CuttingCounter)
-                    _isInteractingWithCuttingCounter = true;
-                else
-                    _isInteractingWithCuttingCounter = false;
-            }
-            else
-            {
-                _isInteractingWithCuttingCounter = false;
+                    interact = true;                
             }
         }
-        else
-        {
-            _isInteractingWithCuttingCounter = false;
-        }
+
+        _isInteractingWithCuttingCounter = interact;
     }
 
     public bool IsInteractWithCuttingCounter()
@@ -128,6 +125,19 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         _anim.SetBool(IS_WALKING, _isWalking);
     }
 
+    private void MovingSound()
+    {
+        _audioSource.volume = AudioManager.Instance.GetSFXVolume();
+        _footStepTimer -= Time.deltaTime;
+        if (_footStepTimer < 0f)
+        {
+            _footStepTimer = _footStepTimerMax;
+
+            if (_isWalking)
+                _audioSource.Play();
+        }
+    }
+
     public Transform GetSpawnPoint()
     {
         return _holdingPoint;
@@ -136,6 +146,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     public void SetKitchenObject(KitchenObject kitchenObject)
     {
         this.kitchenObject = kitchenObject;
+
+        if(kitchenObject!=null)
+            AudioManager.Instance.PlaySFX(SoundEnum.PickUpSound);
     }
 
     public KitchenObject GetKitchenObject()

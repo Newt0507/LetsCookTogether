@@ -52,14 +52,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _kitchenObjectSO: {fileID: 11400000, guid: 362d899206c8b2e479b82a7dd4b70881, type: 2}
+  _canBeDelivered: 1
   _validKitchenObjectSOList:
   - {fileID: 11400000, guid: 624e313a53ab022458d66aaa1206be5d, type: 2}
   - {fileID: 11400000, guid: 85006b7763e8df2458169914ef2dc4f9, type: 2}
   - {fileID: 11400000, guid: 21fe1332cedc785438388ef1ca21a45a, type: 2}
   - {fileID: 11400000, guid: 1e6ab9a9a3d802845b5e1108ef620f8f, type: 2}
   - {fileID: 11400000, guid: 02999132a3410d248b0132662d2f9c7d, type: 2}
-  - {fileID: 11400000, guid: 9fc2ccdec61c64649bf9e7841c8c60d7, type: 2}
   _iconTemplateVisual: {fileID: 2885015518419392115}
+  _isPlate: 1
 --- !u!1001 &148168092470407698
 PrefabInstance:
   m_ObjectHideFlags: 0
