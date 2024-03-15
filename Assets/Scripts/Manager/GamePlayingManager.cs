@@ -65,6 +65,7 @@ public class GamePlayingManager : MonoBehaviour
 
             case GameState.Playing:
                 _playingTimer -= Time.deltaTime;
+
                 if (_playingTimer < 0)
                     _gameState = GameState.GameOver;
 
@@ -73,7 +74,7 @@ public class GamePlayingManager : MonoBehaviour
 
             case GameState.GameOver:
                 Time.timeScale = 0f;
-                AudioListener.pause = true;
+                //AudioListener.pause = true;
                 break;
         }
     }
@@ -96,6 +97,12 @@ public class GamePlayingManager : MonoBehaviour
     public int GetReadyTimer()
     {
         return (int)_readyTimer;
+    }
+    
+
+    public int GetRemainTimer()
+    {
+        return (int)_playingTimer;
     }
 
     public float GetPlayingTimer()

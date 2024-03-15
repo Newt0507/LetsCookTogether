@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Fri Fries
   m_EditorClassIdentifier: 
   kitchenObjectSOList:
-  - {fileID: 11400000, guid: 9fc2ccdec61c64649bf9e7841c8c60d7, type: 2}
+  - {fileID: 11400000, guid: 8291b0213468f3b4da89c13a39ed247f, type: 2}
   recipeName: Fri Fries

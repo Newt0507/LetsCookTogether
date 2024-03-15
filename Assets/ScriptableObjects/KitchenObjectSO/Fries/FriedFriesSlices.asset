@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: FriedFriesSlices
   m_EditorClassIdentifier: 
   prefab: {fileID: 1331230944687384268, guid: 01c2a9091f7f80543956eb4d390ea344, type: 3}
-  sprite: {fileID: -766821109, guid: 7f65b0c6784f3e24491d4076e7d0050f, type: 3}
+  sprite: {fileID: -966651325, guid: 7f65b0c6784f3e24491d4076e7d0050f, type: 3}
   prefabName: Fried Fries Slices

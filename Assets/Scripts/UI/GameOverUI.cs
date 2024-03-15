@@ -48,6 +48,9 @@ public class GameOverUI : MonoBehaviour
     private void Show()
     {
         gameObject.SetActive(true);
+        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.StopSFX();
+        AudioManager.Instance.PlaySFX(SoundEnum.GameOverSound);
     }
 
 

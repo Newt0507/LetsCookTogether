@@ -45,8 +45,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         if(_isWalking) Move();
     }
-
-    /*private void GetInputByTouch()
+/*
+    private void GetInputByTouch()
     {
         if (Input.touchCount > 0)
         {
@@ -94,18 +94,21 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void InteractCounter()
     {
-        Vector3 direction = _targetPosition - transform.position;
+        Vector3 local = new Vector3(transform.position.x, transform.position.y + transform.lossyScale.y / 2, transform.position.z);
 
         float interactDistance = 1f;
         bool interact = false;
-        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, interactDistance))
+
+        if (Physics.Raycast(local, transform.forward, out RaycastHit hit, interactDistance))
         {
             if (hit.transform.TryGetComponent(out BaseCounter baseCounter))
             {
                 _isWalking = false;
 
                 if (GamePlayingManager.Instance.IsPlayingState())
+                {
                     baseCounter.Interact(this);
+                }
 
                 if (baseCounter is CuttingCounter)
                     interact = true;                

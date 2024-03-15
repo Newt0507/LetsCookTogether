@@ -14,4 +14,5 @@ public enum SoundEnum
     DeliveryFailedSound,
     OnClickSound,
     StartSound,
+    GameOverSound,
 }

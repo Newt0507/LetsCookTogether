@@ -11,7 +11,8 @@ public class DeliveryCounter : BaseCounter
         if (player.HasKitchenObject())
         {
             KitchenObject deliveredKitchenObject = player.GetKitchenObject();
-            DeliveryManager.Instance.DeliveryRecipe(deliveredKitchenObject);            player.GetKitchenObject().DestroySelf();
+            DeliveryManager.Instance.DeliveryRecipe(deliveredKitchenObject);
+            player.GetKitchenObject().DestroySelf();
 
 
             if (deliveredKitchenObject.TryGetContainerKitchenObject(out ContainerKitchenObject containerKitchenObject))
